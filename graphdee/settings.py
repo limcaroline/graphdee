@@ -10,37 +10,65 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
 # Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
+# See:
+# https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-22cp5_#+n3)_w-5@s+^7z=2kjaxbxrdum%)^_%2l00tz^-2)k_'
+# Read from environment in production; fall back to a dev key locally.
+SECRET_KEY: str = os.getenv('SECRET_KEY', 'dev-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG: bool = os.getenv('DEBUG', 'True') == 'True'
 
-ALLOWED_HOSTS = []
+# Hosts allowed to serve the site (comma-separated in env)
+ALLOWED_HOSTS: list[str] = os.getenv(
+    'ALLOWED_HOSTS',
+    'localhost,127.0.0.1'
+).split(',')
 
+# If you deploy (e.g. Heroku), set this to your full https origin(s)
+_csrf_env = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+CSRF_TRUSTED_ORIGINS: list[str] = _csrf_env.split(',') if _csrf_env else []
 
 # Application definition
-
-INSTALLED_APPS = [
+INSTALLED_APPS: list[str] = [
+    # Django core
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # Needed by django-allauth
+    'django.contrib.sites',
+
+    # Third-party
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+
+    # Local apps (create with `startapp`; comment until created if needed)
+    'gallery',
+    'orders',
 ]
 
-MIDDLEWARE = [
+# Required by django-allauth
+SITE_ID: int = 1
+
+MIDDLEWARE: list[str] = [
     'django.middleware.security.SecurityMiddleware',
+
+    # WhiteNoise: efficient static files in production
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -49,15 +77,18 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'graphdee.urls'
+ROOT_URLCONF: str = 'graphdee.urls'
 
-TEMPLATES = [
+TEMPLATES: list[dict] = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        # Project-level templates directory
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                # Keep Django defaults + request (required by allauth)
+                'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
@@ -66,57 +97,86 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'graphdee.wsgi.application'
-
+WSGI_APPLICATION: str = 'graphdee.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
+DATABASES: dict = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
+# Authentication / django-allauth
+AUTHENTICATION_BACKENDS: tuple[str, ...] = (
+    # Django admin login, permissions, etc.
+    'django.contrib.auth.backends.ModelBackend',
+    # allauth auth
+    'allauth.account.auth_backends.AuthenticationBackend',
+)
+
+LOGIN_REDIRECT_URL: str = '/'
+LOGOUT_REDIRECT_URL: str = '/'
+ACCOUNT_EMAIL_REQUIRED: bool = True
+ACCOUNT_USERNAME_REQUIRED: bool = True
+ACCOUNT_AUTHENTICATION_METHOD: str = 'username_email'
+ACCOUNT_EMAIL_VERIFICATION: str = 'none'  # simple for school project
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS: list[dict] = [
     {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.'
+        'UserAttributeSimilarityValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+        'NAME':
+        'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
-
-LANGUAGE_CODE = 'en-us'
-
-TIME_ZONE = 'UTC'
-
-USE_I18N = True
-
-USE_TZ = True
-
+LANGUAGE_CODE: str = 'en-us'
+TIME_ZONE: str = 'UTC'
+USE_I18N: bool = True
+USE_TZ: bool = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
+STATIC_URL: str = '/static/'
+STATICFILES_DIRS: list[Path] = [BASE_DIR / 'static']
+STATIC_ROOT: Path = BASE_DIR / 'staticfiles'
 
-STATIC_URL = 'static/'
+# Media (user uploads)
+MEDIA_URL: str = '/media/'
+MEDIA_ROOT: Path = BASE_DIR / 'media'
+
+# Storage (Django 4.2+/5.x) with WhiteNoise for static files
+STORAGES: dict = {
+    'staticfiles': {
+        'BACKEND':
+        'whitenoise.storage.CompressedManifestStaticFilesStorage',
+    },
+    'default': {
+        'BACKEND': 'django.core.files.storage.FileSystemStorage',
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
+DEFAULT_AUTO_FIELD: str = 'django.db.models.BigAutoField'
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+# Stripe (read from environment; leave blank locally if not testing yet)
+STRIPE_PUBLIC_KEY: str = os.getenv('STRIPE_PUBLIC_KEY', '')
+STRIPE_SECRET_KEY: str = os.getenv('STRIPE_SECRET_KEY', '')
