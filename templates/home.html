@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="container hero">
+  <div class="row align-items-center g-4">
+    <div class="col-12 col-lg-6">
+      <h1 class="hero-title display-4">Welcome to graphDee</h1>
+      <div class="hero-text">
+        <p>Custom graphics made simple — logos, posters, and icons tailored to your goals.</p>
+      </div>
+      <div class="hero-cta mt-3">
+        <a class="btn btn-light-on-dark btn-lg" href="/orders/">Order Now</a>
+        <a class="btn btn-outline-light btn-lg" href="/">See Portfolio</a>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6">
+      <img class="hero-img img-fluid" src="{% static 'img/hero.jpg' %}" alt="Featured design preview">
+    </div>
+  </div>
+</section>
+{% endblock %}

@@ -68,11 +68,11 @@ MIDDLEWARE: list[str] = [
 
     # WhiteNoise: efficient static files in production
     'whitenoise.middleware.WhiteNoiseMiddleware',
-
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'allauth.account.middleware.AccountMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -118,10 +118,13 @@ AUTHENTICATION_BACKENDS: tuple[str, ...] = (
 
 LOGIN_REDIRECT_URL: str = '/'
 LOGOUT_REDIRECT_URL: str = '/'
-ACCOUNT_EMAIL_REQUIRED: bool = True
-ACCOUNT_USERNAME_REQUIRED: bool = True
-ACCOUNT_AUTHENTICATION_METHOD: str = 'username_email'
-ACCOUNT_EMAIL_VERIFICATION: str = 'none'  # simple for school project
+
+# allauth (new-style settings)
+ACCOUNT_LOGIN_METHODS: set[str] = {'username', 'email'}
+ACCOUNT_SIGNUP_FIELDS: list[str] = [
+    'email*', 'username*', 'password1*', 'password2*'
+]
+ACCOUNT_EMAIL_VERIFICATION: str = 'none'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
