@@ -36,12 +36,13 @@ DEBUG: bool = os.getenv('DEBUG', 'True') == 'True'
 # Hosts allowed to serve the site (comma-separated in env)
 ALLOWED_HOSTS: list[str] = os.getenv(
     'ALLOWED_HOSTS',
-    'localhost,127.0.0.1'
+    'localhost,127.0.0.1,graphdee-production-app-5fefb210336f.herokuapp.com',
 ).split(',')
 
-# If you deploy (e.g. Heroku), set this to your full https origin(s)
 _csrf_env = os.getenv('CSRF_TRUSTED_ORIGINS', '')
-CSRF_TRUSTED_ORIGINS: list[str] = _csrf_env.split(',') if _csrf_env else []
+CSRF_TRUSTED_ORIGINS: list[str] = (
+    _csrf_env.split(',') if _csrf_env else ['https://graphdee-production-app-5fefb210336f.herokuapp.com/']
+)
 
 # Application definition
 INSTALLED_APPS: list[str] = [
@@ -61,7 +62,7 @@ INSTALLED_APPS: list[str] = [
     'allauth.account',
     'allauth.socialaccount',
 
-    # Local apps (create with `startapp`; comment until created if needed)
+    # Local apps
     'gallery',
     'orders',
 ]
