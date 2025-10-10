@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container section order-form">
+  <h2 class="mb-4">Place an Order</h2>
+
+  <form method="post" class="row g-3">
+    {% csrf_token %}
+
+    <div class="col-12 col-md-6">
+      <label class="form-label">Type</label>
+      <select name="type" id="type" class="form-select">
+        <option value="logo">Logo</option>
+        <option value="poster">Poster</option>
+        <option value="icon">Icon</option>
+      </select>
+    </div>
+
+    <div class="col-12 col-md-6">
+      <label class="form-label">Size</label>
+      <select name="size" id="size" class="form-select">
+        <option value="S">Small</option>
+        <option value="M">Medium</option>
+        <option value="L">Large</option>
+      </select>
+    </div>
+
+    <div class="col-12">
+      <label class="form-label">Description</label>
+      <textarea
+        name="description"
+        id="description"
+        class="form-control"
+        rows="4"
+        placeholder="Describe your goals, style preferences, text,
+colors..."
+      ></textarea>
+    </div>
+
+    <div class="col-12">
+      <p class="mt-2">
+        <strong>
+          Estimated Price (preview): $
+          <span id="preview">30.00</span>
+        </strong>
+        <br>
+        <small class="text-muted">
+          The final price is determined on the server.
+        </small>
+      </p>
+    </div>
+
+    <div class="col-12">
+      <button type="submit" class="btn btn-light-on-dark btn-lg">
+        Pay with Stripe
+      </button>
+    </div>
+  </form>
+</section>
+
+<script>
+(function () {
+  const typeSel = document.getElementById('type');
+  const sizeSel = document.getElementById('size');
+  const preview = document.getElementById('preview');
+
+  function calc() {
+    const base = { logo: 30, poster: 40, icon: 20 }[typeSel.value];
+    const mult = { S: 1.0, M: 1.5, L: 2.0 }[sizeSel.value];
+    preview.textContent = (base * mult).toFixed(2);
+  }
+
+  typeSel.addEventListener('change', calc);
+  sizeSel.addEventListener('change', calc);
+  calc();
+})();
+</script>
+{% endblock %}
