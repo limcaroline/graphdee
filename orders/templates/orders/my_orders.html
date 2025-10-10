@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="container section">
+  <h2>My Orders</h2>
+  {% for o in orders %}
+    <div class="mb-3">
+      <p>#{{ o.id }} — {{ o.type|title }} {{ o.size }} — ${{ o.price }}
+        — Paid: {{ o.paid|yesno:"Yes,No" }} — Status: {{ o.status }}</p>
+      {% if o.design_file %}
+        <p><a class="btn btn-light-on-dark btn-sm" href="{{ o.design_file.url }}" download>Download Finished Design</a></p>
+      {% endif %}
+    </div>
+    <hr />
+  {% empty %}
+    <p>You have no orders yet. <br> Find anything strange? <a href="#">Contact support</a>.</p>
+  {% endfor %}
+</section>
+{% endblock %}
