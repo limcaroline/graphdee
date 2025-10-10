@@ -41,7 +41,7 @@ ALLOWED_HOSTS: list[str] = os.getenv(
 
 _csrf_env = os.getenv('CSRF_TRUSTED_ORIGINS', '')
 CSRF_TRUSTED_ORIGINS: list[str] = (
-    _csrf_env.split(',') if _csrf_env else ['https://graphdee-production-app-5fefb210336f.herokuapp.com/']
+    _csrf_env.split(',') if _csrf_env else ['https://graphdee-production-app-5fefb210336f.herokuapp.com']
 )
 
 # Application definition
