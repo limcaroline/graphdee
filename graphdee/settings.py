@@ -31,7 +31,7 @@ if (BASE_DIR / "env.py").exists():
 SECRET_KEY: str = os.getenv('SECRET_KEY', 'dev-secret-key')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG: bool = os.getenv('DEBUG', 'True') == 'True'
+DEBUG: bool = os.getenv('DEBUG', 'False') == 'True'
 
 # Hosts allowed to serve the site (comma-separated in env)
 ALLOWED_HOSTS: list[str] = os.getenv(
