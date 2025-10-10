@@ -18,6 +18,10 @@ import dj_database_url
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR: Path = Path(__file__).resolve().parent.parent
 
+# Load local env vars if env.py exists (ignored in Git)
+if (BASE_DIR / "env.py").exists():
+    import env  # noqa: F401
+
 # Quick-start development settings - unsuitable for production
 # See:
 # https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/

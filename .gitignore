@@ -17,6 +17,15 @@ db.sqlite3
 staticfiles/
 media/
 
+# Environment variables / secrets
+.env
+.env.*
+env.py
+
+# IDE & tooling
+.vscode/
+.idea/
+
 # macOS / iCloud
 .DS_Store
 .AppleDouble
@@ -28,3 +37,4 @@ Icon?
 .fseventsd
 .DocumentRevisions-V100
 .TemporaryItems
+
