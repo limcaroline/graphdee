@@ -1,7 +1,18 @@
 {% extends "base.html" %}
 {% block content %}
 <section class="container section">
-  <h1 class="hero-title">graphDee — Gallery</h1>
-  <p>Gallery placeholder.</p>
+  <h1 class="hero-title">graphDee — Portfolio</h1>
+  <p>Browse completed designs and testimonials.</p>
+  <hr />
+  {% for d in designs %}
+    <div class="mb-4">
+      <img src="{{ d.image.url }}" width="220" class="img-fluid mb-2" alt="{{ d.title }}">
+      <p><strong>{{ d.title }}</strong></p>
+      {% if d.testimonial %}<p>{{ d.testimonial }}</p>{% endif %}
+    </div>
+    <hr />
+  {% empty %}
+    <p>No designs yet.</p>
+  {% endfor %}
 </section>
 {% endblock %}
