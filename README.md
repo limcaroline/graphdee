@@ -1,4 +1,4 @@
-# graphDee — A Minimal Freelance Graphic Design Store (Django 5.2, Python 3.12)
+# graphDee — A Freelance Graphic Design Store
 
 ## Project Overview
 **graphDee** is a simple full-stack web app where customers can purchase custom graphic design work. Visitors can browse a showcase gallery; registered users can place an order, see a live price preview (JS), pay in Stripe test mode, and track orders. Staff can upload completed work for the customer to download.

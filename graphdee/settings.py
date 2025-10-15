@@ -41,7 +41,11 @@ ALLOWED_HOSTS: list[str] = os.getenv(
 
 _csrf_env = os.getenv('CSRF_TRUSTED_ORIGINS', '')
 CSRF_TRUSTED_ORIGINS: list[str] = (
-    _csrf_env.split(',') if _csrf_env else ['https://graphdee-production-app-5fefb210336f.herokuapp.com']
+    _csrf_env.split(',')
+    if _csrf_env
+    else [
+        'https://graphdee-production-app-5fefb210336f.herokuapp.com'
+    ]
 )
 
 # Application definition
@@ -185,24 +189,6 @@ STATIC_ROOT: Path = BASE_DIR / 'staticfiles'
 MEDIA_URL: str = '/media/'
 MEDIA_ROOT: Path = BASE_DIR / 'media'
 
-if 'USE_AWS' in os.environ:
-    # Bucket Config
-    AWS_STORAGE_BUCKET_NAME = 'graphdee-production-app'
-    AWS_S3_REGION_NAME = 'eu-north-1'
-    AWS_ACCESS_KEY_ID = os.getenv('AWS_ACCESS_KEY_ID')
-    AWS_SECRET_ACCESS_KEY = os.getenv('AWS_SECRET_ACCESS_KEY')
-    AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
-
-    # Static files (CSS, JavaScript, Images) and media files
-    STATICFILES_STORAGE = 'custom_storages.StaticStorage'
-    STATICFILES_LOCATION = 'static'
-    DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
-    MEDIAFILES_LOCATION = 'media'
-
-    # Override static and media URLs in production
-    STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{STATICFILES_LOCATION}/'
-    MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIAFILES_LOCATION}/'
-
 
 # Storage (Django 4.2+/5.x) with WhiteNoise for static files
 STORAGES: dict = {
@@ -214,6 +200,33 @@ STORAGES: dict = {
         'BACKEND': 'django.core.files.storage.FileSystemStorage',
     },
 }
+
+
+# Media to S3 when USE_AWS=True (keeps static on WhiteNoise)
+if os.getenv("USE_AWS", "False") == "True":
+    AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME", "")
+    AWS_S3_REGION_NAME = os.getenv("AWS_S3_REGION_NAME", "")
+    AWS_DEFAULT_ACL = None
+    AWS_QUERYSTRING_AUTH = False
+
+    STATICFILES_LOCATION = "static"
+    MEDIAFILES_LOCATION = "media"
+
+    # static -> S3
+    STORAGES["staticfiles"] = {
+        "BACKEND": "custom_storages.StaticStorage",
+    }
+
+    # media -> S3
+    STORAGES["default"] = {
+        "BACKEND": "custom_storages.MediaStorage",
+    }
+
+    if AWS_STORAGE_BUCKET_NAME and AWS_S3_REGION_NAME:
+        base = (f"{AWS_STORAGE_BUCKET_NAME}.s3."
+                f"{AWS_S3_REGION_NAME}.amazonaws.com")
+        STATIC_URL = f"https://{base}/{STATICFILES_LOCATION}/"
+        MEDIA_URL = f"https://{base}/{MEDIAFILES_LOCATION}/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
