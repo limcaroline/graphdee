@@ -43,6 +43,35 @@
 
   {% block content %}{% endblock %}
 
+  <!-- Footer -->
+  <footer class="site-footer mt-auto">
+  <div class="container py-4">
+    <h3 class="mb-3">Get in touch with us!</h3>
+    <ul class="list-unstyled mb-3">
+      <li>Email: <a href="mailto:hello@example.com">hello@example.com</a></li>
+      <li>Phone: <a href="tel:+1234567890">+1 234 567 890</a></li>
+    </ul>
+    <div class="d-flex gap-3 mb-3">
+      <a href="https://www.facebook.com" target="_blank" rel="noopener">Facebook</a>
+      <a href="https://www.instagram.com" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://www.linkedin.com" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="{% url 'orders:create_order' %}" class="btn btn-outline-light btn-sm">Order Now</a>
+    </div>
+    <small>&copy; {% now "Y" %} GraphDee</small>
+  </div>
+</footer>
+
+<style>
+  .site-footer { background: #000; color: #fff; }
+  .site-footer a { color: #fff; text-decoration: none; }
+  .site-footer a:hover { color: silver; text-decoration: underline; }
+  .site-footer .btn-outline-light:hover {
+    color: #000; background: silver; border-color: silver;
+  }
+</style>
+
+
+<!-- Bootstrap 5 JS Bundle with Popper -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
           integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
           crossorigin="anonymous"></script>
