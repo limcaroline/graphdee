@@ -43,7 +43,7 @@ def create_order(request):
         client = StripeClient(settings.STRIPE_SECRET_KEY)
 
         success_url = (
-            request.build_absolute_uri(reverse("payment_success"))
+            request.build_absolute_uri(reverse("orders:payment_success"))
             + "?session_id={CHECKOUT_SESSION_ID}"
         )
         cancel_url = request.build_absolute_uri(reverse("orders:create_order"))
