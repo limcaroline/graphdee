@@ -38,4 +38,11 @@ Icon?
 .DocumentRevisions-V100
 .TemporaryItems
 
+*accessKeys*.csv
+*_accessKeys.csv
 
+.pytest_cache/
+.coverage
+htmlcov/
+
+.python-version
