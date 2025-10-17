@@ -46,7 +46,7 @@ def create_order(request):
             request.build_absolute_uri(reverse("payment_success"))
             + "?session_id={CHECKOUT_SESSION_ID}"
         )
-        cancel_url = request.build_absolute_uri(reverse("create_order"))
+        cancel_url = request.build_absolute_uri(reverse("orders:create_order"))
 
         session = client.v1.checkout.sessions.create(
             mode="payment",
