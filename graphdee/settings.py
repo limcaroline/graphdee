@@ -148,7 +148,8 @@ ACCOUNT_LOGIN_METHODS: set[str] = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS: list[str] = [
     'email*', 'username*', 'password1*', 'password2*'
 ]
-ACCOUNT_EMAIL_VERIFICATION: str = 'none'
+ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
@@ -190,7 +191,7 @@ MEDIA_URL: str = '/media/'
 MEDIA_ROOT: Path = BASE_DIR / 'media'
 
 
-# Storage (Django 4.2+/5.x) with WhiteNoise for static files
+# Storage (Django) with WhiteNoise for static files
 STORAGES: dict = {
     'staticfiles': {
         'BACKEND':
@@ -212,12 +213,12 @@ if os.getenv("USE_AWS", "False") == "True":
     STATICFILES_LOCATION = "static"
     MEDIAFILES_LOCATION = "media"
 
-    # static -> S3
+    # static to S3
     STORAGES["staticfiles"] = {
         "BACKEND": "custom_storages.StaticStorage",
     }
 
-    # media -> S3
+    # media to S3
     STORAGES["default"] = {
         "BACKEND": "custom_storages.MediaStorage",
     }
@@ -232,6 +233,6 @@ if os.getenv("USE_AWS", "False") == "True":
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 DEFAULT_AUTO_FIELD: str = 'django.db.models.BigAutoField'
 
-# Stripe (read from environment; leave blank locally if not testing yet)
+# Stripe payments
 STRIPE_PUBLIC_KEY: str = os.getenv('STRIPE_PUBLIC_KEY', '')
 STRIPE_SECRET_KEY: str = os.getenv('STRIPE_SECRET_KEY', '')

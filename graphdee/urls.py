@@ -17,6 +17,7 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from orders import views as order_views
 from django.conf import settings
 from django.conf.urls.static import static
 
@@ -24,5 +25,6 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("allauth.urls")),
     path("orders/", include(("orders.urls", "orders"), namespace="orders")),
+    path("stripe/webhook/", order_views.stripe_webhook, name="stripe_webhook"),
     path("", include("gallery.urls")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
