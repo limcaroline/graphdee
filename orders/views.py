@@ -50,7 +50,7 @@ def create_order(request):
             line_items=[
                 {
                     "price_data": {
-                        "currency": "usd",
+                        "currency": "sek",
                         "product_data": {
                             "name": f"{type_.title()} ({size})"
                         },

@@ -4,15 +4,18 @@
   <h2>My Orders</h2>
   {% for o in orders %}
     <div class="mb-3">
-      <p>#{{ o.id }} — {{ o.type|title }} {{ o.size }} — ${{ o.price }}
-        — Paid: {{ o.paid|yesno:"Yes,No" }} — Status: {{ o.status }}</p>
+      <p>
+        #{{ o.id }} | <strong>{{ o.type|title }} {{ o.size }} 
+        {{ o.description|default_if_none:""|cut:" "|default:"No description"|truncatechars:30 }}</strong>
+        | {{ o.price }} kr | {{ o.paid|yesno:"Paid,Unpaid" }} - Status: {{ o.status }}
+      </p>
       {% if o.design_file %}
         <p><a class="btn btn-light-on-dark btn-sm" href="{{ o.design_file.url }}" download>Download Finished Design</a></p>
       {% endif %}
     </div>
     <hr />
   {% empty %}
-    <p>You have no orders yet. <br> Find anything strange? <a href="#">Contact support</a>.</p>
+    <p>You have no orders yet. <br>Find anything strange? <a href="#footer">Email or call us!</a>.</p>
   {% endfor %}
 </section>
 {% endblock %}

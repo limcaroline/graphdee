@@ -13,7 +13,7 @@
     const s = sizeEl.value;
     if (!base[t] || !mult[s]) { out.textContent = ""; return; }
     const price = (base[t] * mult[s]).toFixed(2);
-    out.textContent = `$${price} (preview)`;
+    out.textContent = `${price} kr (preview)`;
   }
 
   typeEl.addEventListener("change", calc);
