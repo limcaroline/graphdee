@@ -1,20 +1,16 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
-<section class="container hero">
-  <div class="row align-items-center g-4">
-    <div class="col-12 col-lg-6">
-      <h1 class="hero-title display-4">Welcome to graphDee</h1>
-      <div class="hero-text">
-        <p>Custom graphics made simple — logos, posters, and icons tailored to your goals.</p>
-      </div>
-      <div class="hero-cta mt-3">
-        <a class="btn btn-light-on-dark btn-lg" href="/orders/">Order Now</a>
-        <a class="btn btn-outline-light btn-lg" href="/">See Portfolio</a>
-      </div>
-    </div>
-    <div class="col-12 col-lg-6">
-      <img class="hero-img img-fluid" src="{% static 'img/hero.jpg' %}" alt="Featured design preview">
-    </div>
+<section class="hero container section text-center">
+  <img src="{% static 'img/portfolio1.webp' %}" alt="Welcome"
+       class="img-fluid mb-4"
+       style="max-height: 360px; object-fit: cover; width: 100%;">
+  <h1 class="mb-3">Welcome to graphDee</h1>
+  <p class="lead mb-4">Custom graphics made simple. Logos, posters, and icons tailored to how you want them!</p>
+  <div class="d-flex gap-2 justify-content-center">
+    <a class="btn btn-primary" href="{% url 'gallery' %}">See our portfolio</a>
+    <a class="btn btn-outline-light" href="{% url 'orders:create_order' %}">Order Now</a>
   </div>
 </section>
 {% endblock %}

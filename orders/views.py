@@ -8,7 +8,6 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-from stripe import StripeClient
 
 from .models import Order
 
@@ -40,15 +39,13 @@ def create_order(request):
             paid=False,
         )
 
-        client = StripeClient(settings.STRIPE_SECRET_KEY)
-
         success_url = (
             request.build_absolute_uri(reverse("orders:payment_success"))
             + "?session_id={CHECKOUT_SESSION_ID}"
         )
         cancel_url = request.build_absolute_uri(reverse("orders:create_order"))
 
-        session = client.v1.checkout.sessions.create(
+        session = stripe.checkout.Session.create(
             mode="payment",
             line_items=[
                 {

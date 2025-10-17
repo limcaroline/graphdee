@@ -1,77 +1,50 @@
-{% extends 'base.html' %}
-{% block content %}
-<section class="container section order-form">
-  <h2 class="mb-4">Place an Order</h2>
+{% extends "base.html" %}
+{% load static %}
 
-  <form method="post" class="row g-3">
+{% block content %}
+<div class="container section">
+  <h2>Place an Order</h2>
+
+  <form method="post">
     {% csrf_token %}
 
-    <div class="col-12 col-md-6">
-      <label class="form-label">Type</label>
-      <select name="type" id="type" class="form-select">
+    <!-- Type -->
+    <div class="mb-3">
+      <label for="id_type" class="form-label">Type</label>
+      <select id="id_type" name="type" class="form-select" required>
         <option value="logo">Logo</option>
         <option value="poster">Poster</option>
         <option value="icon">Icon</option>
       </select>
     </div>
 
-    <div class="col-12 col-md-6">
-      <label class="form-label">Size</label>
-      <select name="size" id="size" class="form-select">
+    <!-- Size -->
+    <div class="mb-3">
+      <label for="id_size" class="form-label">Size</label>
+      <select id="id_size" name="size" class="form-select" required>
         <option value="S">Small</option>
         <option value="M">Medium</option>
         <option value="L">Large</option>
       </select>
     </div>
 
-    <div class="col-12">
-      <label class="form-label">Description</label>
-      <textarea
-        name="description"
-        id="description"
-        class="form-control"
-        rows="4"
-        placeholder="Describe your goals, style preferences, text,
-colors..."
-      ></textarea>
+    <!-- Description -->
+    <div class="mb-3">
+      <label for="id_description" class="form-label">Description</label>
+      <textarea id="id_description" name="description" class="form-control" rows="4" placeholder="Describe your goals, text, colors, and any style preferences as you wish!"></textarea>
     </div>
 
-    <div class="col-12">
-      <p class="mt-2">
-        <strong>
-          Estimated Price (preview): $
-          <span id="preview">30.00</span>
-        </strong>
-        <br>
-        <small class="text-muted">
-          The final price is determined on the server.
-        </small>
-      </p>
-    </div>
+    <!-- Price preview -->
+    <p class="fw-bold">Estimated Price: <span id="js-price-preview"></span></p>
 
-    <div class="col-12">
-      <button type="submit" class="btn btn-light-on-dark btn-lg">
-        Pay with Stripe
-      </button>
-    </div>
+    <button class="btn btn-primary" type="submit">Pay with Stripe</button>
   </form>
-</section>
+</div>
+{% endblock %}
 
-<script>
-(function () {
-  const typeSel = document.getElementById('type');
-  const sizeSel = document.getElementById('size');
-  const preview = document.getElementById('preview');
+{% block postload_js %}
+{{ block.super }}
 
-  function calc() {
-    const base = { logo: 30, poster: 40, icon: 20 }[typeSel.value];
-    const mult = { S: 1.0, M: 1.5, L: 2.0 }[sizeSel.value];
-    preview.textContent = (base * mult).toFixed(2);
-  }
-
-  typeSel.addEventListener('change', calc);
-  sizeSel.addEventListener('change', calc);
-  calc();
-})();
-</script>
+<!-- JS script -->
+<script src="{% static 'js/price_preview.js' %}"></script>
 {% endblock %}
