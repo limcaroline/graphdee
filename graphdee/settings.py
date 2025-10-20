@@ -149,6 +149,7 @@ ACCOUNT_SIGNUP_FIELDS: list[str] = [
     'email*', 'username*', 'password1*', 'password2*'
 ]
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
 ACCOUNT_EMAIL_REQUIRED = True
 
 # EMAIL
@@ -166,7 +167,7 @@ else:
     EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASS', '')
     DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
     SERVER_EMAIL = DEFAULT_FROM_EMAIL
-    
+
     ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 # Password validation
