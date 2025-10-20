@@ -149,7 +149,25 @@ ACCOUNT_SIGNUP_FIELDS: list[str] = [
     'email*', 'username*', 'password1*', 'password2*'
 ]
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+ACCOUNT_EMAIL_REQUIRED = True
+
+# EMAIL
+if 'DEVELOPMENT' in os.environ:
+    # Local dev: print emails to console
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    DEFAULT_FROM_EMAIL = 'graphdee@gmail.com'
+else:
+    # Production: real emails via Gmail SMTP
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    EMAIL_USE_TLS = True
+    EMAIL_PORT = 587
+    EMAIL_HOST = 'smtp.gmail.com'
+    EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
+    EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASS', '')
+    DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL', EMAIL_HOST_USER)
+    SERVER_EMAIL = DEFAULT_FROM_EMAIL
+    
+    ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
