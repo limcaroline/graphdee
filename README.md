@@ -48,8 +48,9 @@ This project satisfies typical Django full-stack requirements: multiple apps, re
 - **Admin** (`/admin/`) — Django admin for staff.
 
 ### Wireframes
-
-**Homepage**
+- ![Home – Mobile](resources/wireframes/wireframe-mobile.png)
+- ![Home – Mobile](resources/wireframes/wireframe-tablet.png)
+- ![Home – Mobile](resources/wireframes/wireframe-large.png)
 
 
 ## Features
@@ -70,6 +71,7 @@ This project satisfies typical Django full-stack requirements: multiple apps, re
 - HTML  
 - CSS  
 - JavaScript
+- Python
 
 
 #### Frameworks, Libraries & Programs Used
@@ -87,6 +89,7 @@ Autoprefixer for CSS versatility https://autoprefixer.github.io/
 The W3C CSS Validation Service to review codes https://www.w3.org/
 Nu Html Checker to review codes https://validator.nu/
 WebAIM: Contrast Checker to verify contrast for color palette https://webaim.org/resources/contrastchecker/
+Also see TESTING.md
 
 - **Python** 
 - **Django** 
@@ -98,6 +101,9 @@ WebAIM: Contrast Checker to verify contrast for color palette https://webaim.org
 - **Bootstrap 5**
 - Minimal custom **JavaScript** (price preview)
 - **Git & GitHub**
+- **Heroku**
+- **AWS S3**
+- **Cloudinary**
 
 
 ### Deployment & Local Development
@@ -143,11 +149,6 @@ Run this command: git clone https://github.com/limcaroline/graphdee
 See TESTING.md 
 
 
-
-### Stretch Goals
-
-
-
 ### Future Enhancements
 More detailed pricing options (colors, turnaround, vector source).
 Change Requests: a one-click “Request changes” status (single revision round).
@@ -175,12 +176,16 @@ Canva for images
 Bootstap Version 5.3 for styling/layout
 Google Fonts for typography
 Font Awesome for icons
-Code
+Favicon.io
 
 Bootstrap for cards and similar, also see comments in VSCode https://getbootstrap.com/
-Code Institute's modules, including BoardWalk Games and Love Running https://learn.codeinstitute.net/dashboard
+Code Institute's modules https://learn.codeinstitute.net/dashboard
 ChatGPT for helping with ideas, debugging, and structuring https://chatgpt.com/
 Autoprefixer for code prefix on transition
+Discord for references and examples
+Django documentation https://docs.djangoproject.com/en/5.2/
+w3schools for python tutorials and materials https://www.w3schools.com/
+learnpython.org for python tutorials and materials https://www.learnpython.org/
 
 Acknowledgments
 
