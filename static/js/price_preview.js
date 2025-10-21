@@ -3,7 +3,7 @@
   const sizeEl = document.getElementById("id_size");
   const out = document.getElementById("js-price-preview");
 
-  if (!typeEl || !sizeEl || !out) return;
+if (!typeEl || !sizeEl || !out) { return; }
 
   const base = { logo: 30, poster: 40, icon: 20 };
   const mult = { S: 1.0, M: 1.5, L: 2.0 };

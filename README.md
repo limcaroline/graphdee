@@ -140,26 +140,20 @@ Run this command: git clone https://github.com/limcaroline/graphdee
 
 
 ### Testing
-Manual testing
-
-
-Automated Testing
+See TESTING.md 
 
 
 
-Stretch Goals
+### Stretch Goals
 
+
+
+### Future Enhancements
+More detailed pricing options (colors, turnaround, vector source).
 Change Requests: a one-click “Request changes” status (single revision round).
-
 Accept + Testimonial: save testimonial and auto-add final image to Gallery.
 
-
-Future Enhancements
-Role-based dashboards with richer status controls.
-More detailed pricing options (colors, turnaround, vector source).
-
-
-Credits
+### Credits
 
 Django — https://www.djangoproject.com/
 
@@ -187,6 +181,7 @@ Bootstrap for cards and similar, also see comments in VSCode https://getbootstra
 Code Institute's modules, including BoardWalk Games and Love Running https://learn.codeinstitute.net/dashboard
 ChatGPT for helping with ideas, debugging, and structuring https://chatgpt.com/
 Autoprefixer for code prefix on transition
+
 Acknowledgments
 
 Big thanks to Code Institute’s team as well as materials and Level 5 Diploma in Web Application Development modules and walkthrough projects, which I have used as references!

@@ -1,0 +1,11 @@
+{
+  "esversion": 11,
+  "browser": true,
+  "devel": true,
+  "undef": true,
+  "unused": true,
+  "curly": true,
+  "eqeqeq": true,
+  "latedef": "nofunc",
+  "globals": { "Stripe": true, "bootstrap": true }
+}

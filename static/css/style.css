@@ -44,6 +44,14 @@ a:hover, .nav-link:hover, .navbar-brand:hover { color: #e2e2e2; }
 .navbar-dark .navbar-nav .nav-link { color: #f8f9fa; }
 .navbar-dark .navbar-nav .nav-link.active { color: #fff; font-weight: 700; }
 
+/* Footer */
+.site-footer { background: #000; color: #fff; }
+.site-footer a { color: #fff; text-decoration: none; }
+.site-footer a:hover { color: silver; text-decoration: underline; }
+.site-footer .btn-outline-light:hover {
+  color: #000; background: silver; border-color: silver;
+}
+
 /* Responsiveness */
 .gallery-grid {
   display: grid;
