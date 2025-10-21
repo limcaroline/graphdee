@@ -149,8 +149,6 @@ ACCOUNT_SIGNUP_FIELDS: list[str] = [
     'email*', 'username*', 'password1*', 'password2*'
 ]
 ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
-ACCOUNT_AUTHENTICATION_METHOD = 'username_email'
-ACCOUNT_EMAIL_REQUIRED = True
 
 # EMAIL
 if 'DEVELOPMENT' in os.environ:
