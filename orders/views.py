@@ -122,3 +122,28 @@ def stripe_webhook(request):
                 pass
 
     return HttpResponse(status=200)
+
+@login_required
+def update_order(request, order_id):
+    order = Order.objects.filter(id=order_id, user=request.user).first()
+    if not order:
+        return redirect('orders:my_orders')
+
+    if request.method == 'POST':
+        from .forms import OrderForm
+        form = OrderForm(request.POST, request.FILES, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect('orders:my_orders')
+    else:
+        from .forms import OrderForm
+        form = OrderForm(instance=order)
+
+    return render(request, 'orders/order_update.html', {'form': form, 'order': order})
+
+@login_required
+def delete_order(request, order_id):
+    order = Order.objects.filter(id=order_id, user=request.user).first()
+    if order:
+        order.delete()
+    return redirect('orders:my_orders')

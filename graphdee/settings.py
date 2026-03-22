@@ -148,7 +148,13 @@ ACCOUNT_LOGIN_METHODS: set[str] = {'username', 'email'}
 ACCOUNT_SIGNUP_FIELDS: list[str] = [
     'email*', 'username*', 'password1*', 'password2*'
 ]
-ACCOUNT_EMAIL_VERIFICATION = 'mandatory'
+# New code
+if os.getenv("DEVELOPMENT", "False") == "True":
+    # Local development, print emails to console
+    ACCOUNT_EMAIL_VERIFICATION = "none"
+else:
+    # Production in Heroku, temporarily disable verification
+    ACCOUNT_EMAIL_VERIFICATION = "none"
 
 # EMAIL
 if 'DEVELOPMENT' in os.environ:
