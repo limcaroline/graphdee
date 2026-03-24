@@ -5,39 +5,24 @@
 <div class="container section">
   <h2>Place an Order</h2>
 
-  <form method="post">
+  <form method="post" enctype="multipart/form-data">
     {% csrf_token %}
 
-    <!-- Type -->
-    <div class="mb-3">
-      <label for="id_type" class="form-label">Type</label>
-      <select id="id_type" name="type" class="form-select" required>
-        <option value="logo">Logo</option>
-        <option value="poster">Poster</option>
-        <option value="icon">Icon</option>
-      </select>
-    </div>
+    {% if form.errors %}
+      <div class="alert alert-danger">
+        {{ form.errors }}
+      </div>
+    {% endif %}
 
-    <!-- Size -->
-    <div class="mb-3">
-      <label for="id_size" class="form-label">Size</label>
-      <select id="id_size" name="size" class="form-select" required>
-        <option value="S">Small</option>
-        <option value="M">Medium</option>
-        <option value="L">Large</option>
-      </select>
-    </div>
+    {{ form.as_p }}
 
-    <!-- Description -->
-    <div class="mb-3">
-      <label for="id_description" class="form-label">Description</label>
-      <textarea id="id_description" name="description" class="form-control" rows="4" placeholder="Describe your goals, text, colors, and any style preferences as you wish!"></textarea>
-    </div>
+    <p class="fw-bold">
+      Estimated Price: <span id="js-price-preview"></span>
+    </p>
 
-    <!-- Price preview -->
-    <p class="fw-bold">Estimated Price: <span id="js-price-preview"></span></p>
-
-    <button class="btn btn-primary" type="submit">Pay with Stripe</button>
+    <button class="btn btn-primary" type="submit">
+      Pay with Stripe
+    </button>
   </form>
 </div>
 {% endblock %}

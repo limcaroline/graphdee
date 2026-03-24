@@ -8,7 +8,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views.decorators.csrf import csrf_exempt
-
+from .forms import OrderForm
 from .models import Order
 
 
@@ -25,51 +25,46 @@ def server_price(type_, size):
 @login_required
 def create_order(request):
     if request.method == "POST":
-        type_ = request.POST.get("type")
-        size = request.POST.get("size")
-        desc = request.POST.get("description", "").strip()
-        price = server_price(type_, size)
+        form = OrderForm(request.POST, request.FILES)
+        if form.is_valid():
+            order = form.save(commit=False)
+            order.user = request.user
+            order.price = server_price(order.type, order.size)
+            order.paid = False
+            order.save()
 
-        order = Order.objects.create(
-            user=request.user,
-            type=type_,
-            size=size,
-            description=desc,
-            price=price,
-            paid=False,
-        )
+            success_url = (
+                request.build_absolute_uri(reverse("orders:payment_success"))
+                + "?session_id={CHECKOUT_SESSION_ID}"
+            )
+            cancel_url = request.build_absolute_uri(reverse("orders:create_order"))
 
-        success_url = (
-            request.build_absolute_uri(reverse("orders:payment_success"))
-            + "?session_id={CHECKOUT_SESSION_ID}"
-        )
-        cancel_url = request.build_absolute_uri(reverse("orders:create_order"))
-
-        session = stripe.checkout.Session.create(
-            mode="payment",
-            line_items=[
-                {
-                    "price_data": {
-                        "currency": "sek",
-                        "product_data": {
-                            "name": f"{type_.title()} ({size})"
+            session = stripe.checkout.Session.create(
+                mode="payment",
+                line_items=[
+                    {
+                        "price_data": {
+                            "currency": "sek",
+                            "product_data": {
+                                "name": f"{order.type.title()} ({order.size})"
+                            },
+                            "unit_amount": int(order.price * 100),
                         },
-                        "unit_amount": int(price * 100),
-                    },
-                    "quantity": 1,
-                }
-            ],
-            success_url=success_url,
-            cancel_url=cancel_url,
-            metadata={"order_id": str(order.id)},
-        )
-        return redirect(session.url)
+                        "quantity": 1,
+                    }
+                ],
+                success_url=success_url,
+                cancel_url=cancel_url,
+                metadata={"order_id": str(order.id)},
+            )
+            return redirect(session.url)
+    else:
+        form = OrderForm()
 
-    return render(
-        request,
-        "orders/order_form.html",
-        {"stripe_public_key": settings.STRIPE_PUBLIC_KEY},
-    )
+    return render(request, "orders/order_form.html", {
+        "form": form,
+        "stripe_public_key": settings.STRIPE_PUBLIC_KEY
+    })
 
 
 @login_required
@@ -91,6 +86,40 @@ def payment_success(request):
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by("-id")
     return render(request, "orders/my_orders.html", {"orders": orders})
+
+
+def update_order(request, order_id):
+    order = Order.objects.filter(id=order_id, user=request.user).first()
+    if not order:
+        return redirect("orders:my_orders")
+
+    if request.method == "POST":
+        form = OrderForm(request.POST, request.FILES, instance=order)
+        if form.is_valid():
+            form.save()
+            return redirect("orders:my_orders")
+    else:
+        form = OrderForm(instance=order)
+
+    return render(request, "orders/update_order.html", {
+        "form": form,
+        "order": order
+    })
+
+    filename = os.path.basename(order.design_file.name) if order.design_file else None
+
+    return render(request, "orders/update_order.html", {
+        "order": order,
+        "filename": filename
+    })
+
+
+@login_required
+def delete_order(request, order_id):
+    order = Order.objects.filter(id=order_id, user=request.user).first()
+    if order:
+        order.delete()
+    return redirect('orders:my_orders')
 
 
 # Webhook to mark orders as paid after successful checkout
@@ -122,28 +151,3 @@ def stripe_webhook(request):
                 pass
 
     return HttpResponse(status=200)
-
-@login_required
-def update_order(request, order_id):
-    order = Order.objects.filter(id=order_id, user=request.user).first()
-    if not order:
-        return redirect('orders:my_orders')
-
-    if request.method == 'POST':
-        from .forms import OrderForm
-        form = OrderForm(request.POST, request.FILES, instance=order)
-        if form.is_valid():
-            form.save()
-            return redirect('orders:my_orders')
-    else:
-        from .forms import OrderForm
-        form = OrderForm(instance=order)
-
-    return render(request, 'orders/order_update.html', {'form': form, 'order': order})
-
-@login_required
-def delete_order(request, order_id):
-    order = Order.objects.filter(id=order_id, user=request.user).first()
-    if order:
-        order.delete()
-    return redirect('orders:my_orders')
