@@ -32,6 +32,8 @@ a:hover, .nav-link:hover, .navbar-brand:hover { color: #e2e2e2; }
 /* Buttons */
 .btn-light-on-dark { background: #f4f4f4; color: #000; border: 0; }
 .btn-light-on-dark:hover { background: #e0e0e0; }
+.download-btn { background-color: #00c857; color: #ffffff; border: 2px solid #00c857; }
+.download-btn:hover { background-color: #009624; border-color: #009624; color: #ffffff; }
 
 /* Hero layout */
 .hero { padding: 3rem 0; }

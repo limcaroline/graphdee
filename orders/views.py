@@ -106,13 +106,6 @@ def update_order(request, order_id):
         "order": order
     })
 
-    filename = os.path.basename(order.design_file.name) if order.design_file else None
-
-    return render(request, "orders/update_order.html", {
-        "order": order,
-        "filename": filename
-    })
-
 
 @login_required
 def delete_order(request, order_id):
