@@ -18,9 +18,7 @@
         <strong>Actions:</strong><br>
         <a href="{% url 'orders:update_order' o.id %}" class="btn btn-primary btn-sm">Edit</a>
 
-        <a href="{% url 'orders:delete_order' o.id %}"
-          class="btn btn-danger btn-sm"
-          onclick="return confirm('Are you sure you want to delete this order?');">
+        <a href="{% url 'orders:delete_order' o.id %}" class="btn btn-danger btn-sm">
           Delete
         </a>
       </div>

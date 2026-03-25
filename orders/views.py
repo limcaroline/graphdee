@@ -29,6 +29,7 @@ def create_order(request):
         if form.is_valid():
             order = form.save(commit=False)
             order.user = request.user
+            # Custom logic using python by calculating price based on type and size
             order.price = server_price(order.type, order.size)
             order.paid = False
             order.save()
@@ -110,9 +111,14 @@ def update_order(request, order_id):
 @login_required
 def delete_order(request, order_id):
     order = Order.objects.filter(id=order_id, user=request.user).first()
-    if order:
+    if not order:
+        return redirect('orders:my_orders')
+
+    if request.method == "POST":
         order.delete()
-    return redirect('orders:my_orders')
+        return redirect('orders:my_orders')
+
+    return render(request, "orders/delete_order.html", {"order": order})
 
 
 # Webhook to mark orders as paid after successful checkout

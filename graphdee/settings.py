@@ -116,7 +116,7 @@ WSGI_APPLICATION: str = 'graphdee.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 # Use SQLite in development; Postgres in production (Heroku)
-if 'DEVELOPMENT' in os.environ:
+if os.getenv("DEVELOPMENT", "False") == "True":
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
