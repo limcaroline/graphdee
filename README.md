@@ -64,11 +64,12 @@ This project satisfies typical Django full-stack requirements: multiple apps, re
 - Stripe integration (test mode) for secure payments
 - Orders marked as paid after successful checkout
 ### My Orders (Full CRUD) page for users (see history, status, download result).
-- Create orders with type, size, and description
-- Read/view all user orders
-- Update existing orders
-- Delete orders with confirmation page
+- Create: Users submit a new order via the order form
+- Read: Users can view all their orders on the "My Orders" page
+- Update: Users can edit order details (type, size, description, file) before payment
+- Delete: Users can delete orders via a confirmation page
 - Upload and download design files
+- Access control is enforced so users can only view and modify their own orders.
 - **Admin delivery**: staff uploads completed files and marks status.
 - **Static/Media handling** with WhiteNoise (static) and Django media.
 
@@ -91,6 +92,11 @@ All CRUD operations are implemented on the Order model, allowing users to fully 
 - image
 - description
 - testimonial (optional)
+
+
+### Relationships
+- Each Order is linked to a single User
+- Each user can have multiple orders 
 
 Also see TESTING.md
 
@@ -121,7 +127,8 @@ Also see TESTING.md
 - WebAIM: Contrast Checker to verify contrast for color palette https://webaim.org/resources/contrastchecker/
 
 - **Python**  
-Custom business logic to calculate order pricing dynamically
+- Custom Python logic to calculate order pricing dynamically based on type and size
+- Additional logic is to prevent modification of paid orders and handling files during updates.
 ```python
 def server_price(type_, size):
     base = {"logo": 30, "poster": 40, "icon": 20}[type_]
@@ -178,8 +185,6 @@ DATABASE_URL=your_postgres_url
 STRIPE_PUBLIC_KEY=your_key
 STRIPE_SECRET_KEY=your_key
 STRIPE_WEBHOOK_SECRET=your_key
-
-If using AWS S3:
 
 USE_AWS=True
 AWS_STORAGE_BUCKET_NAME=your_bucket
@@ -303,5 +308,5 @@ learnpython.org for python tutorials and materials https://www.learnpython.org/
 Acknowledgments
 
 Big thanks to Code Institute’s team as well as materials and Level 5 Diploma in Web Application Development modules and walkthrough projects, which I have used as references!
-Special thanks to ChatGPT by OpenAI for assistance in troubleshooting and debugging, as well as support in ideas and structure.
+Special thanks to ChatGPT by OpenAI and Claude Code by Anthropic for assistance in troubleshooting and debugging, as well as support in ideas and structure.
 Thank you to all the mentioned in this readme and in VScode that was helpful in making this project!
