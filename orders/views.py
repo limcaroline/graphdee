@@ -95,14 +95,30 @@ def update_order(request, order_id):
     if not order:
         return redirect("orders:my_orders")
 
+    # Store original file to delete later if new file uploaded or restore if no new file
+    original_file = order.design_file
+
     if request.method == "POST":
         form = OrderForm(request.POST, request.FILES, instance=order)
+
         if form.is_valid():
-            if 'design_file' in request.FILES and order.design_file:
-                old_file = order.design_file
-                order.design_file.delete(save=False)
-            form.save()
+            updated_order = form.save(commit=False)
+
+            updated_order.user = request.user
+
+            # recalculate price using python
+            updated_order.price = server_price(updated_order.type, updated_order.size)
+
+            if order.paid:
+                return redirect("orders:my_orders")
+
+            if not request.FILES.get('design_file'):
+                # No new file uploaded → keep old file
+                updated_order.design_file = original_file
+
+            updated_order.save()
             return redirect("orders:my_orders")
+
     else:
         form = OrderForm(instance=order)
 

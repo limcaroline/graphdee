@@ -11,16 +11,23 @@
       <p>
         <strong>Order #{{ o.id }}</strong><br>
         {{ o.type|title }} ({{ o.size }})<br>
-        {{ o.description|default_if_none:""|cut:" "|default:"No description"|truncatechars:30 }}</strong>
+        {{ o.description|default_if_none:""|cut:" "|default:"No description"|truncatechars:30 }}
         | {{ o.price }} kr | {{ o.paid|yesno:"Paid,Unpaid" }} - Status: {{ o.status }}
       </p>
       <div class="mt-2">
         <strong>Actions:</strong><br>
-        <a href="{% url 'orders:update_order' o.id %}" class="btn btn-primary btn-sm">Edit</a>
 
-        <a href="{% url 'orders:delete_order' o.id %}" class="btn btn-danger btn-sm">
-          Delete
-        </a>
+        {% if not o.paid %}
+          <a href="{% url 'orders:update_order' o.id %}" class="btn btn-primary btn-sm">
+            Edit
+          </a>
+
+          <a href="{% url 'orders:delete_order' o.id %}" class="btn btn-danger btn-sm">
+            Delete
+          </a>
+        {% else %}
+          <span class="text-muted">Order locked after payment</span>
+        {% endif %}
       </div>
       {% if o.design_file %}
       <p>

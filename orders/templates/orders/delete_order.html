@@ -4,6 +4,22 @@
 <div class="container section">
   <h2>Delete Order</h2>
 
+  {% if order.paid %}
+
+  <div class="alert alert-warning">
+    This order has already been paid and cannot be deleted.
+  </div>
+
+  <a href="{% url 'orders:my_orders' %}" class="btn btn-secondary">
+    Back
+  </a>
+
+{% else %}
+
+  <p class="text-danger fw-bold">
+    ⚠️ This action cannot be undone.
+  </p>
+
   <p>
     Are you sure you want to delete <strong>Order #{{ order.id }}</strong>?
   </p>
@@ -16,7 +32,7 @@
   <form method="post">
     {% csrf_token %}
 
-    <button type="submit" class="btn btn-danger">
+    <button type="submit" class="btn btn-danger" aria-label="Delete this order permanently">
       Yes, Delete
     </button>
 
@@ -24,5 +40,7 @@
       Cancel
     </a>
   </form>
+
+{% endif %}
 </div>
 {% endblock %}
