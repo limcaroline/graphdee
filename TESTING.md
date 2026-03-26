@@ -36,16 +36,16 @@ GraphDee was tested across a range of viewport sizes using Chrome DevTools devic
 ![My Orders – Mobile](resources/testing/responsiveness/wireframe-mobile4.png)
 
 ### Tablet Screenshots
-![Home – Mobile](resources/testing/responsiveness/wireframe-tablet1.png)
-![Gallery – Mobile](resources/testing/responsiveness/wireframe-tablet2.png)
-![Order – Mobile](resources/testing/responsiveness/wireframe-tablet3.png)
-![My Orders – Mobile](resources/testing/responsiveness/wireframe-tablet4.png)
+![Home – Tablet](resources/testing/responsiveness/wireframe-tablet1.png)
+![Gallery – Tablet](resources/testing/responsiveness/wireframe-tablet2.png)
+![Order – Tablet](resources/testing/responsiveness/wireframe-tablet3.png)
+![My Orders – Tablet](resources/testing/responsiveness/wireframe-tablet4.png)
 
 ### Desktop Screenshots
-![Home – Mobile](resources/testing/responsiveness/wireframe-large1.png)
-![Gallery – Mobile](resources/testing/responsiveness/wireframe-large2.png)
-![Order – Mobile](resources/testing/responsiveness/wireframe-large3.png)
-![My Orders – Mobile](resources/testing/responsiveness/wireframe-large4.png)
+![Home – Desktop](resources/testing/responsiveness/wireframe-large1.png)
+![Gallery – Desktop](resources/testing/responsiveness/wireframe-large2.png)
+![Order – Desktop](resources/testing/responsiveness/wireframe-large3.png)
+![My Orders – Desktop](resources/testing/responsiveness/wireframe-large4.png)
 
 ---
 
@@ -208,6 +208,8 @@ All tests below were performed on both **local** (`http://127.0.0.1:8000`) and *
 | Feature | Expected Outcome | Testing Performed | Result | Pass/Fail |
 | :-----: | :--------------: | :---------------: | :----: | :-------: |
 | List orders | Shows id, type, size, description (30 chars), price (kr), paid flag, status. | Loaded page. | Details correct. | Pass |
+| File upload | User can upload design file | Uploaded file in edit form | File saved and visible in My Orders | Pass |
+| File download | User can download file | Clicked download button | File downloaded correctly | Pass |
 | Paid status | Marked paid after Stripe webhook. | Triggered test webhook. | Status updated to **Paid** in production; local requires CLI listener. | Pass |
 
 **Authentication (allauth)**
@@ -216,6 +218,8 @@ All tests below were performed on both **local** (`http://127.0.0.1:8000`) and *
 | Signup | Creates account. | Signed up test user. | Account created. | Pass |
 | Login | Logs user in. | Logged in new user. | Logged in with success msg. | Pass |
 | Logout | Logs user out. | Clicked logout. | Logged out. | Pass |
+
+All CRUD functionality (Create, Read, Update, Delete) was manually tested through the frontend interface.
 
 ---
 
@@ -229,6 +233,7 @@ All tests below were performed on both **local** (`http://127.0.0.1:8000`) and *
 | S3 static not appearing. | Added `USE_AWS=True` config, `STATICFILES_LOCATION="static"`, ran `collectstatic`, and set bucket policy to allow public read (objects). |
 | Public bucket ACL advice from tutorial not available. | Used **Bucket owner enforced** with **Bucket Policy** for public reads rather than ACLs. |
 | Price preview currency symbol inconsistent. | Updated `price_preview.js` to output `kr`, and server-side pricing stays authoritative. |
+| Uploaded file names included random suffix (e.g. _VcM8rlB) | Implemented Python logic using regex to clean filenames before display in templates. |
 
 ### Known Bugs
 | Bug | Description |

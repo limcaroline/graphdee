@@ -104,7 +104,6 @@ Also see TESTING.md
 - JavaScript
 - Python
 
-
 #### Frameworks, Libraries & Programs Used
 - VS Code for local development https://code.visualstudio.com/
 - Github for saving and storing files, and version control https://github.com/
@@ -121,12 +120,16 @@ Also see TESTING.md
 - Nu Html Checker to review codes https://validator.nu/
 - WebAIM: Contrast Checker to verify contrast for color palette https://webaim.org/resources/contrastchecker/
 
-- **Python**  Custom business logic to calculate order pricing dynamically
+- **Python**  
+Custom business logic to calculate order pricing dynamically
 ```python
 def server_price(type_, size):
     base = {"logo": 30, "poster": 40, "icon": 20}[type_]
     mult = {"S": 1.0, "M": 1.5, "L": 2.0}[size]
     return Decimal(base * mult).quantize(Decimal("0.01"))
+```
+Additional Python logic is used to process uploaded file names and remove automatically generated suffixes, improving user experience and demonstrating string manipulation using regular expressions.
+
 - **Django** 
 - **django-allauth** 
 - **Stripe** (Checkout Sessions, SDK)
@@ -209,40 +212,33 @@ Order creation
 Order editing and deletion
 File upload and download
 Stripe payment flow
+
 Running Locally
 Clone repository:
-
 git clone https://github.com/limcaroline/graphdee.git
 
 cd graphdee
 
 Create virtual environment:
-
 python3 -m venv venv
 source venv/bin/activate
 
 Install dependencies:
-
 pip install -r requirements.txt
 
 Set environment variables:
-
 export DEVELOPMENT=True
 export SECRET_KEY=your_secret_key
 
 Run migrations:
-
 python manage.py migrate
 
 Run server:
-
 python manage.py runserver
-
 
 Sensitive data such as API keys and secret keys are stored in environment variables and are not included in the repository for security reasons.
 
 ### Version Control
-
 The project is stored in a GitHub repository https://github.com/limcaroline/graphdee and version controlled using Git.  
 Changes are committed locally and pushed to GitHub, which is connected to Heroku for deployment.
 

@@ -89,6 +89,7 @@ def my_orders(request):
     return render(request, "orders/my_orders.html", {"orders": orders})
 
 
+@login_required
 def update_order(request, order_id):
     order = Order.objects.filter(id=order_id, user=request.user).first()
     if not order:
@@ -97,6 +98,9 @@ def update_order(request, order_id):
     if request.method == "POST":
         form = OrderForm(request.POST, request.FILES, instance=order)
         if form.is_valid():
+            if 'design_file' in request.FILES and order.design_file:
+                old_file = order.design_file
+                order.design_file.delete(save=False)
             form.save()
             return redirect("orders:my_orders")
     else:

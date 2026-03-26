@@ -1,3 +1,5 @@
+import os
+import re
 from django.db import models
 from django.contrib.auth.models import User
 
@@ -39,3 +41,16 @@ class Order(models.Model):
             f"{self.user.username} - {self.type} {self.size} "
             f"(${self.price})"
         )
+
+    @property
+    def clean_filename(self):
+        """No Django's random suffix"""
+        try:
+            if not self.design_file:
+                return None
+
+            filename = os.path.basename(self.design_file.name or "")
+            return re.sub(r'_[A-Za-z0-9]{7}(?=\.)', '', filename)
+
+        except Exception:
+            return "file"

@@ -23,13 +23,14 @@
         </a>
       </div>
       {% if o.design_file %}
-        <p>
-          <strong>Design File:</strong><br>
-          <a class="btn download-btn btn-sm fw-bold" href="{{ o.design_file.url }}" download>
-            Download File
-          </a>
-        </p>
-      {% endif %}
+      <p>
+        <strong>Design File:</strong> {{ o.clean_filename }}<br>
+
+        <a class="btn download-btn btn-sm fw-bold" href="{{ o.design_file.url }}" download>
+          Download File
+        </a>
+      </p>
+    {% endif %}
     </div>
     <hr />
   {% empty %}
