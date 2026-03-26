@@ -54,14 +54,45 @@ This project satisfies typical Django full-stack requirements: multiple apps, re
 
 
 ## Features
-- **Authentication** via `django-allauth` (email or username).
-- **Gallery** of previous designs with optional testimonial text.
-- **Order form** with server-validated pricing and client-side preview.
-- **Stripe Checkout** (test mode) with server-calculated price.
-- **My Orders** page for users (see history, status, download result).
+### Authentication via `django-allauth` (email or username).
+- Users can register, log in, and log out
+- Only logged-in users can create and manage orders
+### Gallery of previous designs with optional testimonial text.
+- Order form with server-validated pricing and client-side preview.
+### Payments
+- Stripe Checkout (test mode) with server-calculated price.
+- Stripe integration (test mode) for secure payments
+- Orders marked as paid after successful checkout
+### My Orders (Full CRUD) page for users (see history, status, download result).
+- Create orders with type, size, and description
+- Read/view all user orders
+- Update existing orders
+- Delete orders with confirmation page
+- Upload and download design files
 - **Admin delivery**: staff uploads completed files and marks status.
-- **Dark theme** with Google Fonts (Akaya Kanadaka / Shadows Into Light Two / Spectral) and **Bootstrap** for responsive layout.
 - **Static/Media handling** with WhiteNoise (static) and Django media.
+
+All CRUD operations are implemented on the Order model, allowing users to fully manage their data through the frontend.
+
+## Data Model
+
+### Order Model
+- user (ForeignKey to User)
+- type (logo, poster, icon)
+- size (S, M, L)
+- description (text)
+- design_file (file upload)
+- price (decimal)
+- paid (boolean)
+- status (text)
+
+### Gallery Model
+- title
+- image
+- description
+- testimonial (optional)
+
+Also see TESTING.md
 
 ---
 
@@ -84,18 +115,23 @@ This project satisfies typical Django full-stack requirements: multiple apps, re
 - Google Fonts for typography https://fonts.google.com/
 - Font Awesome for icons https://fontawesome.com/
 - Favicon.io for generation of favicons https://favicon.io/
-- Bootstap Version 5.3 for styling/layout https://getbootstrap.com/
-Autoprefixer for CSS versatility https://autoprefixer.github.io/
-The W3C CSS Validation Service to review codes https://www.w3.org/
-Nu Html Checker to review codes https://validator.nu/
-WebAIM: Contrast Checker to verify contrast for color palette https://webaim.org/resources/contrastchecker/
-Also see TESTING.md
+- Bootstrap for styling/layout https://getbootstrap.com/
+- Autoprefixer for CSS versatility https://autoprefixer.github.io/
+- The W3C CSS Validation Service to review codes https://www.w3.org/
+- Nu Html Checker to review codes https://validator.nu/
+- WebAIM: Contrast Checker to verify contrast for color palette https://webaim.org/resources/contrastchecker/
 
-- **Python** 
+- **Python**  Custom business logic to calculate order pricing dynamically
+```python
+def server_price(type_, size):
+    base = {"logo": 30, "poster": 40, "icon": 20}[type_]
+    mult = {"S": 1.0, "M": 1.5, "L": 2.0}[size]
+    return Decimal(base * mult).quantize(Decimal("0.01"))
 - **Django** 
 - **django-allauth** 
 - **Stripe** (Checkout Sessions, SDK)
-- **SQLite** (dev), **PostgreSQL** in production via `psycopg2-binary`
+- **SQLite** (dev)
+- **PostgreSQL** in production via `psycopg2-binary`
 - **Gunicorn**, **WhiteNoise**
 - **Pillow**
 - **Bootstrap 5**
@@ -103,31 +139,112 @@ Also see TESTING.md
 - **Git & GitHub**
 - **Heroku**
 - **AWS S3**
-- **Cloudinary**
-
 
 ### Deployment & Local Development
 Github Repo: https://github.com/limcaroline/graphdee
 
-#### How to create repo in Github for deployments
-I first followed these steps from Code Institute module to create a repo in github:
-1. Log into www.github.com. Click the plus icon and select New repository.
-2. Name the repository accordingly - Note: I used travel-world.
-3. Select Create repository.
-4. Copy the commands from … or create a new repository on the command line.
-5. In VS Code, use "Open folder" from the file menu to open your vscode-projects folder and create a new project directory.
-6. Open a new terminal, and paste in the commands copied from GitHub.
-7. You should now see the README.md file appear in the Explorer.
+##### Heroku Deployment
+This project is deployed using Heroku with a PostgreSQL database.
 
-#### How to Deploy 
-These are the steps to deploy in github that I followed, also referenced from Code Institute's module:
+Prerequisites
+A Heroku account
+A GitHub repository
+A Stripe account (for payments)
 
-From VSCode, commit and push all your changes to Github.
-Go to GitHub repo https://github.com/limcaroline/graphdee, select Settings, then Pages.
-Select the main branch and then Save.
-In the Code tab, select Deployments.
-On the Deployments page, refresh until the link is provided.
-Click the link to check that it is working
+Steps to Deploy
+Create Heroku App
+Go to the Heroku Dashboard
+Click "New" → "Create new app"
+Choose a unique app name
+Connect GitHub Repository
+Go to the Deploy tab
+Select GitHub
+Connect your repository
+Enable automatic deploys (optional)
+Set Environment Variables (Config Vars)
+
+In Heroku → Settings → Config Vars, add:
+
+SECRET_KEY=your_secret_key
+DEBUG=False
+ALLOWED_HOSTS=graphdee-production-app-5fefb210336f.herokuapp.com
+CSRF_TRUSTED_ORIGINS=https://graphdee-production-app-5fefb210336f.herokuapp.com
+
+DATABASE_URL=your_postgres_url
+
+STRIPE_PUBLIC_KEY=your_key
+STRIPE_SECRET_KEY=your_key
+STRIPE_WEBHOOK_SECRET=your_key
+
+If using AWS S3:
+
+USE_AWS=True
+AWS_STORAGE_BUCKET_NAME=your_bucket
+AWS_S3_REGION_NAME=your_region
+
+Database Setup
+Heroku automatically provisions PostgreSQL.
+
+Run migrations:
+python manage.py migrate
+
+Collect static files
+python manage.py collectstatic --noinput
+
+Create Superuser
+python manage.py createsuperuser
+
+Deploy Application
+Push to GitHub:
+git push origin main
+
+Then deploy via Heroku dashboard or
+git push heroku main in VSCode
+
+Test Deployment
+Visit your live URL and test:
+
+User registration and login
+Order creation
+Order editing and deletion
+File upload and download
+Stripe payment flow
+Running Locally
+Clone repository:
+
+git clone https://github.com/limcaroline/graphdee.git
+
+cd graphdee
+
+Create virtual environment:
+
+python3 -m venv venv
+source venv/bin/activate
+
+Install dependencies:
+
+pip install -r requirements.txt
+
+Set environment variables:
+
+export DEVELOPMENT=True
+export SECRET_KEY=your_secret_key
+
+Run migrations:
+
+python manage.py migrate
+
+Run server:
+
+python manage.py runserver
+
+
+Sensitive data such as API keys and secret keys are stored in environment variables and are not included in the repository for security reasons.
+
+### Version Control
+
+The project is stored in a GitHub repository https://github.com/limcaroline/graphdee and version controlled using Git.  
+Changes are committed locally and pushed to GitHub, which is connected to Heroku for deployment.
 
 #### How to Fork
 In Github, go to this Repository: https://github.com/limcaroline/graphdee
@@ -173,7 +290,7 @@ Media
 
 See also Frameworks, Libraries & Programs Used for more references
 Canva for images
-Bootstap Version 5.3 for styling/layout
+Bootstrap Version 5.3 for styling/layout
 Google Fonts for typography
 Font Awesome for icons
 Favicon.io
