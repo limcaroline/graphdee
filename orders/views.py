@@ -72,14 +72,33 @@ def create_order(request):
 def payment_success(request):
     session_id = request.GET.get("session_id")
     order = None
-    if session_id:
-        try:
-            session = stripe.checkout.sessions.retrieve(session_id)
-            oid = (session.get("metadata") or {}).get("order_id")
-            if oid:
-                order = Order.objects.filter(id=oid, user=request.user).first()
-        except Exception:
-            pass
+
+    if not session_id:
+        return render(request, "orders/payment_success.html")
+
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+
+        # 🔍 DEBUG (check terminal)
+        print("SESSION:", session)
+        print("PAYMENT STATUS:", session.get("payment_status"))
+        print("METADATA:", session.get("metadata"))
+
+        # ✅ Only mark as paid if Stripe confirms payment
+        if session.get("payment_status") == "paid":
+
+            order_id = session.get("metadata", {}).get("order_id")
+
+            if order_id:
+                order = Order.objects.filter(id=order_id, user=request.user).first()
+
+                if order and not order.paid:
+                    order.paid = True
+                    order.save(update_fields=["paid"])
+
+    except Exception as e:
+        print("ERROR:", e)
+
     return render(request, "orders/payment_success.html", {"order": order})
 
 
@@ -144,6 +163,7 @@ def delete_order(request, order_id):
 # Webhook to mark orders as paid after successful checkout
 @csrf_exempt
 def stripe_webhook(request):
+    print("WEBHOOK RECEIVED")
     payload = request.body
     sig_header = request.META.get("HTTP_STRIPE_SIGNATURE", "")
     wh_secret = os.getenv("STRIPE_WEBHOOK_SECRET", "")
