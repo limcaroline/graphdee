@@ -41,7 +41,8 @@ This project satisfies typical Django full-stack requirements: multiple apps, re
 ## Website Structure
 
 ### Menu
-- **Home** (`/`) — Gallery and landing CTA.
+- **Home** (`/`) — Homepage and landing CTA.
+- **Gallery** (`/gallery/`) - Portfolio
 - **Order** (`/orders/`) — Order form + Stripe checkout.
 - **My Orders** (`/orders/my/`) — Past orders, statuses, downloads.
 - **Login/Signup/Logout** — Allauth routes under `/accounts/`.
