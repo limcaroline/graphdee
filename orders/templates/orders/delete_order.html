@@ -2,26 +2,14 @@
 
 {% block content %}
 <div class="container section">
-  <h2>Delete Order</h2>
-
-  {% if order.paid %}
-
-  <div class="alert alert-warning">
-    This order has already been paid and cannot be deleted.
-  </div>
-
-  <a href="{% url 'orders:my_orders' %}" class="btn btn-secondary">
-    Back
-  </a>
-
-{% else %}
+  <h2>Cancel Order</h2>
 
   <p class="text-danger fw-bold">
     ⚠️ This action cannot be undone.
   </p>
 
   <p>
-    Are you sure you want to delete <strong>Order #{{ order.id }}</strong>?
+    Are you sure you want to cancel <strong>Order #{{ order.id }}</strong>?
   </p>
 
   <p>
@@ -29,18 +17,23 @@
     {{ order.description|default:"No description" }}
   </p>
 
+  {% if order.paid %}
+    <p class="text-warning">
+      Note: This order has already been paid. You will receive a refund within 7-10 business days after cancelling this order.
+    </p>
+  {% endif %}
+
   <form method="post">
     {% csrf_token %}
 
-    <button type="submit" class="btn btn-danger" aria-label="Delete this order permanently">
-      Yes, Delete
+    <button type="submit" class="btn btn-danger" aria-label="Cancel this order permanently">
+      Yes, Cancel Order
     </button>
 
     <a href="{% url 'orders:my_orders' %}" class="btn btn-secondary">
-      Cancel
+      Go Back
     </a>
   </form>
 
-{% endif %}
 </div>
 {% endblock %}

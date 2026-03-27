@@ -22,11 +22,9 @@
           </a>
 
           <a href="{% url 'orders:delete_order' o.id %}" class="btn btn-danger btn-sm">
-            Delete
+            Cancel Order
           </a>
-        {% else %}
-          <span class="text-muted">Order locked after payment</span>
-        {% endif %}
+          
       </div>
       {% if o.design_file %}
       <p>
