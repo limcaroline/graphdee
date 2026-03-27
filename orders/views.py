@@ -128,9 +128,6 @@ def update_order(request, order_id):
             # recalculate price using python
             updated_order.price = server_price(updated_order.type, updated_order.size)
 
-            if order.paid:
-                return redirect("orders:my_orders")
-
             if not request.FILES.get('design_file'):
                 # No new file uploaded → keep old file
                 updated_order.design_file = original_file

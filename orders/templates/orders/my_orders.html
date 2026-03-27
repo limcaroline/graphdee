@@ -17,7 +17,6 @@
       <div class="mt-2">
         <strong>Actions:</strong><br>
 
-        {% if not o.paid %}
           <a href="{% url 'orders:update_order' o.id %}" class="btn btn-primary btn-sm">
             Edit
           </a>
