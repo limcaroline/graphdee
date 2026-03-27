@@ -30,9 +30,20 @@
       <p>
         <strong>Design File:</strong> {{ o.clean_filename }}<br>
 
-        <a class="btn download-btn btn-sm fw-bold" href="{{ o.design_file.url }}" download>
-          Download File
-        </a>
+        {% if "amazonaws" in o.design_file.url %}
+          <a class="btn download-btn btn-sm fw-bold"
+            href="{{ o.design_file.url }}?response-content-disposition=attachment"
+            aria-label="Download design file">
+            Download File
+          </a>
+        {% else %}
+          <a class="btn download-btn btn-sm fw-bold"
+            href="{{ o.design_file.url }}"
+            download
+            aria-label="Download design file">
+            Download File
+          </a>
+        {% endif %}
       </p>
     {% endif %}
     </div>
