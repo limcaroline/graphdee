@@ -80,6 +80,10 @@ Screens were validated by pasting the rendered HTML (View Source) into the valid
 
 ![w3 - css check results - No errors found.](resources/testing/validations/w3c-css.png)
 
+- w3 - css check results new - No errors found.
+
+![w3 - css check results - No errors found.](resources/testing/validations/w3c-css-new.png)
+
 > Note: Any Django template tags were rendered in-browser before validation to avoid false positives.
 
 ### JSHint
