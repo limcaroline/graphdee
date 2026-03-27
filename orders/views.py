@@ -79,12 +79,7 @@ def payment_success(request):
     try:
         session = stripe.checkout.Session.retrieve(session_id)
 
-        # 🔍 DEBUG (check terminal)
-        print("SESSION:", session)
-        print("PAYMENT STATUS:", session.get("payment_status"))
-        print("METADATA:", session.get("metadata"))
-
-        # ✅ Only mark as paid if Stripe confirms payment
+        # Only mark as paid if Stripe confirms payment
         if session.get("payment_status") == "paid":
 
             order_id = session.get("metadata", {}).get("order_id")
@@ -125,7 +120,7 @@ def update_order(request, order_id):
 
             updated_order.user = request.user
 
-            # recalculate price using python
+            # recalculate price and file handling using python
             updated_order.price = server_price(updated_order.type, updated_order.size)
 
             if not request.FILES.get('design_file'):

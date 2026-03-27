@@ -1,6 +1,9 @@
 # GraphDee – Testing
 
-![Wireframes](resources/wireframes.png)
+### Wireframes
+- ![Home – Mobile](resources/wireframes/wireframe-mobile.png)
+- ![Home – Mobile](resources/wireframes/wireframe-tablet.png)
+- ![Home – Mobile](resources/wireframes/wireframe-large.png)
 
 ---
 
@@ -111,7 +114,7 @@ Lighthouse audits (Performance, Accessibility, Best Practices, SEO) were run in 
 
 **Results, among others:** 
 
-- Lighthouse results are ok.
+- Lighthouse scores indicate acceptable performance, accessibility, best practices, and SEO for a full-stack application.
 
 ![Lighthouse results are ok.](resources/testing/lighthouse/Lighthouse-testing.png)
 
@@ -146,6 +149,13 @@ Pages opened using the Safari browser:
 ![Safari 3](resources/testing/browsers/safari-3.png)
 
 ![Safari 4](resources/testing/browsers/safari-4.png)
+
+![Safari Download Page](resources/testing/browsers/safari-download.png)
+
+![Safari Signout Page](resources/testing/browsers/safari-signout.png)
+
+![Safari Login Page](resources/testing/browsers/safari-login.png)
+
 
 ---
 
@@ -234,11 +244,14 @@ All CRUD functionality (Create, Read, Update, Delete) was manually tested throug
 | Public bucket ACL advice from tutorial not available. | Used **Bucket owner enforced** with **Bucket Policy** for public reads rather than ACLs. |
 | Price preview currency symbol inconsistent. | Updated `price_preview.js` to output `kr`, and server-side pricing stays authoritative. |
 | Uploaded file names included random suffix (e.g. _VcM8rlB) | Implemented Python logic using regex to clean filenames before display in templates. |
+| Uploaded file lost when updating order without re-uploading | Fixed by preserving existing file when no new file is provided using request.FILES check and restoring original file reference. |
+| Orders not marked as paid after Stripe checkout | Implemented fallback logic in payment_success view to verify Stripe session payment_status and update order.paid when webhook is unavailable. |
 
 ### Known Bugs
 | Bug | Description |
 |:----|:------------|
-| Local webhook doesn’t auto-mark orders paid | In development, orders remain “Unpaid” unless you run the Stripe CLI listener and trigger test events; production (Heroku) updates via real endpoint + signing secret. |
+| Local webhook requires Stripe CLI | In local development, Stripe webhooks are not automatically received unless the Stripe CLI listener is running. This is expected behaviour. In production (Heroku), webhooks are correctly handled via the public endpoint and orders are marked as paid automatically. |
+| File download behaviour differs between local and production | Files stored on AWS S3 may open in the browser instead of downloading depending on browser and content-type headers. This does not affect functionality as users can still access the files. |
 | Browser autofill styles on Stripe page | Stripe-hosted page styles are Stripe defaults and may not match site theme exactly (acceptable for test mode). |
 
 ---

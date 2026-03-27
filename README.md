@@ -66,7 +66,7 @@ This project satisfies typical Django full-stack requirements: multiple apps, re
 ### My Orders (Full CRUD) page for users (see history, status, download result).
 - Create: Users submit a new order via the order form
 - Read: Users can view all their orders on the "My Orders" page
-- Update: Users can edit order details (type, size, description, file) before payment
+- Update: Users can edit order details (type, size, description, file)
 - Delete: Users can delete orders via a confirmation page
 - Upload and download design files
 - Access control is enforced so users can only view and modify their own orders.
@@ -74,6 +74,8 @@ This project satisfies typical Django full-stack requirements: multiple apps, re
 - **Static/Media handling** with WhiteNoise (static) and Django media.
 
 All CRUD operations are implemented on the Order model, allowing users to fully manage their data through the frontend.
+
+Access control ensures users can only view, edit, and delete their own orders.
 
 ## Data Model
 
@@ -128,14 +130,24 @@ Also see TESTING.md
 
 - **Python**  
 - Custom Python logic to calculate order pricing dynamically based on type and size
-- Additional logic is to prevent modification of paid orders and handling files during updates.
+- Additional logic is to handle files during updates.
 ```python
 def server_price(type_, size):
     base = {"logo": 30, "poster": 40, "icon": 20}[type_]
     mult = {"S": 1.0, "M": 1.5, "L": 2.0}[size]
     return Decimal(base * mult).quantize(Decimal("0.01"))
 ```
+
 Additional Python logic is used to process uploaded file names and remove automatically generated suffixes, improving user experience and demonstrating string manipulation using regular expressions.
+```python
+if not request.FILES.get('design_file'):
+                # No new file uploaded → keep old file
+                updated_order.design_file = original_file
+```
+Additional Python logic is used to check payment status
+```python
+if session.get("payment_status") == "paid":
+```
 
 - **Django** 
 - **django-allauth** 
@@ -166,15 +178,15 @@ Create Heroku App
 Go to the Heroku Dashboard
 Click "New" → "Create new app"
 Choose a unique app name
+
 Connect GitHub Repository
 Go to the Deploy tab
 Select GitHub
 Connect your repository
 Enable automatic deploys (optional)
+
 Set Environment Variables (Config Vars)
-
 In Heroku → Settings → Config Vars, add:
-
 SECRET_KEY=your_secret_key
 DEBUG=False
 ALLOWED_HOSTS=graphdee-production-app-5fefb210336f.herokuapp.com
